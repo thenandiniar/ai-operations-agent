@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# Secrets
+.env
+.streamlit/secrets.toml
+
+# Generated reports
+reports/*
+!reports/.gitkeep
+
+# Runtime memory
+memory/execution_history.jsonl
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+# Local AI coding assistant skill links
+.agents/
+.claude/
+
+# Local backup
+app/main_backup.py
