@@ -1,4 +1,3 @@
-
 import os
 
 from dotenv import load_dotenv
@@ -18,14 +17,30 @@ class GeminiRequestError(Exception):
 load_dotenv()
 
 
+def get_setting(name: str, default=None):
+    """Read configuration from environment or Streamlit secrets."""
+
+    value = os.getenv(name)
+
+    if value:
+        return value
+
+    try:
+        import streamlit as st
+        return st.secrets.get(name, default)
+    except Exception:
+        return default
+
+
 def create_gemini_client():
     """Create an authenticated Gemini Developer API client."""
 
-    api_key = os.getenv("GEMINI_API_KEY")
+    api_key = get_setting("GEMINI_API_KEY")
 
     if not api_key:
         raise GeminiConfigurationError(
-            "GEMINI_API_KEY is missing. Configure it in your .env file."
+            "GEMINI_API_KEY is missing. Configure it in .env "
+            "or Streamlit Cloud Secrets."
         )
 
     return genai.Client(api_key=api_key)
@@ -37,7 +52,7 @@ def generate_structured_response(
 ) -> BaseModel:
     """Generate and validate a structured Pydantic response."""
 
-    model = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+    model = get_setting("GEMINI_MODEL", "gemini-2.5-flash")
     client = create_gemini_client()
 
     try:
